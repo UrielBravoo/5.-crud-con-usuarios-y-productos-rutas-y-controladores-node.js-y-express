@@ -53,11 +53,33 @@ const eliminarProducto=(req, res) =>{
     const productos= productos.filter(p => p.id !== id);
     res.json({message: 'Producto eliminado', productos});
 }
+
+const venderProducto=(req, res) =>{
+    const { id } = req.params;
+    const { cantidad } = req.body;
+    const producto = productos.find(p => p.id == id);
+    if (!producto) {
+        return res.json({message: 'Producto no encontrado'});
+    }
+    if (cantidad <= 0) {
+        return res.json({message: 'Cantidad inválida'});
+    }
+    if (producto.stock < cantidad) {
+        return res.json({message: 'Stock insuficiente'});
+    }
+    producto.stock -= cantidad;
+    res.json({message: 'Producto vendido',
+         cantidadVendida: cantidad,
+        stockRestante: producto.stock,
+        producto});
+}
+
 module.exports = {
     obtenerProductos,
     obtenerProducto,
     crearProducto,
     actualizarProducto,
     modificarProducto,
-    eliminarProducto
+    eliminarProducto,
+    venderProducto
 };
