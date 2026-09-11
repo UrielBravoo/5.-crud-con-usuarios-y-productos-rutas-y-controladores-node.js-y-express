@@ -4,7 +4,7 @@ const obtenerProductos =(req, res) =>{
     res.json(productos);
 }
 const obtenerProducto=(req, res) =>{
-    const { id } = req.params;
+    const id = parseInt(req.params.id);
     const producto = productos.find(p => p.id === id);
     if (!producto) {
         return res.json({message: 'Producto no encontrado'});
@@ -23,19 +23,19 @@ const crearProducto=(req, res) =>{
 };
 
 const actualizarProducto=(req, res) =>{
-    const { id } = req.params;
+    const id = parseInt(req.params.id);
     const { nombre,precio,stock}= req.body;
     const producto = productos.find(p => p.id === id);
     if (!producto) {
         return res.json({message: 'Producto no encontrado'});
     }
     producto.nombre = nombre;
-    producto.precio = precio;
-    producto.stock = stock;
+    producto.precio = Number(precio);
+    producto.stock = Number(stock);
     res.json({message: 'Producto actualizado', producto});
 };
 const modificarProducto=(req, res) =>{
-    const { id } = req.params;
+    const id = parseInt(req.params.id);
     const { nombre,precio,stock}= req.body;
 
     const productoAModificar= productos.find(p => p.id === id);
@@ -49,18 +49,22 @@ const modificarProducto=(req, res) =>{
    res.json({message: 'Producto modificado', productoAModificar});
 }
 const eliminarProducto=(req, res) =>{
-    const { id } = req.params;
-    const productos= productos.filter(p => p.id !== id);
-    res.json({message: 'Producto eliminado', productos});
+    const id = parseInt(req.params.id);
+    if (!productos.find(p => p.id === id)) {
+        return res.json({message: 'Producto no encontrado'});
+    }
+    let productosSinId= productos.filter(p => p.id !== id);
+    productos= productosSinId;
+    res.json({message: 'Producto eliminado', productos: productosSinId});
 }
 
 const venderProducto=(req, res) =>{
-    const { id } = req.params;
+    const id = Number(req.params.id);
     const { cantidad } = req.body;
     const producto = productos.find(p => p.id == id);
     if (!producto) {
         return res.json({message: 'Producto no encontrado'});
-    }
+    } 
     if (cantidad <= 0) {
         return res.json({message: 'Cantidad inválida'});
     }

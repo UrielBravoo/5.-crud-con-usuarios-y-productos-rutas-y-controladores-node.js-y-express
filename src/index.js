@@ -5,9 +5,7 @@ const routerUsuarios= require('./routes/usuariosRoutes.js');
 const PORT = 3000;
 
 app.use(express.json());
-app.use('/',(req, res) => {
-  res.send('Bienvenido a la API de productos y usuarios');
-});
+
 app.use("/productos", routerProductos);
 app.use("/usuarios", routerUsuarios);
 
